@@ -1,0 +1,57 @@
+name: pipeline
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'   
+  schedule:
+    - cron: "0 9 * * *"
+    # 16 - 7 = 9
+
+jobs:
+  extraction_train_modeling:
+    name: Data Extraction, Training, and Modeling
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set global directory
+        run: git config --global --add safe.directory /github/workspace
+
+      - uses: actions/checkout@v3     
+        with:
+         persist-credentials: false
+         fetch-depth: 1
+
+      - name: Scraping Yahoo Finance
+        run:  go run scraper.go
+
+      - name: Install Libraries
+        run: pip install -r requirements.txt
+
+      - name: Modeling and Training
+        run: python training.py
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "belajarqywok@gmail.com"
+          git config --local user.name "belajarqywok"
+          git add -A
+          git commit -m "Get Cryptocurrencies Data every 4:00 PM"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          branch: main
+
+  deployment:
+    name: Deployment
+    runs-on: ubuntu-latest
+    needs: extraction_train_modeling
+    environment: Production
+
+    steps:
+      - name: Deployment
+        run: echo "coming soon..."

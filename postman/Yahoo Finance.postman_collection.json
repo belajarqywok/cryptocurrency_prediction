@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "249fd388-44f6-45c2-9ad5-37da9c2af089",
+		"name": "Yahoo Finance",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "cryptocurrencies",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "GUC=AQEBCAFmWUlmh0IaaAQw&s=AQAAAH-PIsT_&g=ZlgBjg; A1=d=AQABBBR-S2YCEF6h7KkHtT6kUMd5eQmdvDIFEgEBCAFJWWaHZlpOb2UB_eMBAAcIFH5LZgmdvDI&S=AQAAAge4BvAFwzWWdJFVm5Wyq9k; A3=d=AQABBBR-S2YCEF6h7KkHtT6kUMd5eQmdvDIFEgEBCAFJWWaHZlpOb2UB_eMBAAcIFH5LZgmdvDI&S=AQAAAge4BvAFwzWWdJFVm5Wyq9k; axids=gam=y-BdfSS7lE2uLV0LrGZqbRPm.8FUDjf.82~A&dv360=eS1EdjNSYkpGRTJ1R2RYQTAwYnNhcFJmQ0ZZN3BtTmNGan5B&ydsp=y-wmHAUIFE2uKC4PXfccNh1ff.Lz1oO0cj~A&tbla=y-gt8RDdJE2uKuvojQP3_mil11ZyoZelyw~A; tbla_id=f1c3e4ae-853f-47af-ba52-d13fe18de92e-tuctd4c1d85; PRF=t%3DBTC-USD%252BETH-USD%252BLTC-USD%252BLTC-INR%252BCU%253DF%26newChartbetateaser%3D0%252C1718255372183; A1S=d=AQABBBR-S2YCEF6h7KkHtT6kUMd5eQmdvDIFEgEBCAFJWWaHZlpOb2UB_eMBAAcIFH5LZgmdvDI&S=AQAAAge4BvAFwzWWdJFVm5Wyq9k; cmp=t=1717308407&j=0&u=1---; gpp=DBAA; gpp_sid=-1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"offset\":0,\"size\":50,\"sortType\":\"DESC\",\"sortField\":\"intradaymarketcap\",\"quoteType\":\"CRYPTOCURRENCY\",\"query\":{\"operator\":\"and\",\"operands\":[{\"operator\":\"eq\",\"operands\":[\"currency\",\"USD\"]},{\"operator\":\"eq\",\"operands\":[\"exchange\",\"CCC\"]}]},\"userId\":\"\",\"userIdType\":\"guid\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://query2.finance.yahoo.com/v1/finance/screener?crumb=55ovV9srjcg&lang=en-US&region=US&formatted=true&corsDomain=finance.yahoo.com",
+					"protocol": "https",
+					"host": [
+						"query2",
+						"finance",
+						"yahoo",
+						"com"
+					],
+					"path": [
+						"v1",
+						"finance",
+						"screener"
+					],
+					"query": [
+						{
+							"key": "crumb",
+							"value": "55ovV9srjcg"
+						},
+						{
+							"key": "lang",
+							"value": "en-US"
+						},
+						{
+							"key": "region",
+							"value": "US"
+						},
+						{
+							"key": "formatted",
+							"value": "true"
+						},
+						{
+							"key": "corsDomain",
+							"value": "finance.yahoo.com"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

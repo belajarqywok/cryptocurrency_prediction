@@ -1,0 +1,13 @@
+# Postman
+/postman/dataset.url
+
+# Environments
+/bin
+/Lib
+/lib64
+/Include
+/Scripts
+
+# Pycache
+/__pycache__
+/restful/__pycache__
