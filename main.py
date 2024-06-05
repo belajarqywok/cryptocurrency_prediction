@@ -1,15 +1,14 @@
-import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from restful.routes import route
 
-REST = FastAPI(
+app = FastAPI(
     title = "Cryptocurency Prediction Service",
     version = "1.0"
 )
 
 # CORS Middleware
-REST.add_middleware(
+app.add_middleware(
     CORSMiddleware,
     allow_origins = ["*"],
     allow_methods = ["*"],
@@ -17,7 +16,7 @@ REST.add_middleware(
     allow_credentials = True,
 )
 
-REST.include_router(
+app.include_router(
     router = route,
     prefix = '/crypto'
 )
