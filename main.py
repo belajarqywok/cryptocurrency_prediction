@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from restful.routes import route
+from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title = "Cryptocurency Prediction Service",
@@ -18,5 +19,10 @@ app.add_middleware(
 
 app.include_router(
     router = route,
-    prefix = '/crypto'
+    prefix = '/crypto',
+    tags = ['machine_learning']
 )
+
+@app.get("/", tags = ['Main'])
+def root():
+    return RedirectResponse(url="/docs")
