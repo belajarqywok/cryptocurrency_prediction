@@ -24,34 +24,97 @@ jobs:
          persist-credentials: false
          fetch-depth: 1
 
+      - name: Read pipeline schedule date
+        id: read_schedule
+        run: |
+          SCHEDULE_DATE=$(cat pipeline_schedule.ctl)
+          echo "schedule_date=${SCHEDULE_DATE}" >> $GITHUB_ENV
+
+      - name: Get current date
+        id: get_date
+        run: echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Check if dates match
+        id: date_check
+        run: |
+          if [ "$schedule_date" = "$current_date" ]; then
+            echo "match=true" >> $GITHUB_ENV
+          else
+            echo "match=false" >> $GITHUB_ENV
+          fi
+
       - name: Scraping Yahoo Finance
+        if: env.match != 'true'
         run:  go run scraper.go
 
       - name: Install Libraries
+        if: env.match != 'true'
         run: pip install -r requirements.txt
 
       - name: Modeling and Training
+        if: env.match != 'true'
         run: python training.py
 
+      - name: Set Pipeline Schedule
+        if: env.match != 'true'
+        run: echo "$(date +'%Y-%m-%d')" > pipeline_schedule.ctl
+
       - name: Commit changes
+        if: env.match != 'true'
         run: |
           git config --local user.email "belajarqywok@gmail.com"
           git config --local user.name "belajarqywok"
           git add -A
-          git commit -m "Get Cryptocurrencies Data every 4:00 PM"
+          git commit -m "Data Extraction, Training, and Modeling"
 
       - name: Push changes
+        if: env.match != 'true'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GH_TOKEN }}
-          branch: main
+          branch: main      
 
-  deployment:
-    name: Deployment
+  model_deployment:
+    name: Model Deployment
     runs-on: ubuntu-latest
     needs: extraction_train_modeling
     environment: Production
 
     steps:
-      - name: Deployment
-        run: echo "coming soon..."
+      - name: Set global directory
+        run: git config --global --add safe.directory /github/workspace
+
+      - uses: actions/checkout@v3     
+        with:
+         persist-credentials: false
+         fetch-depth: 1
+
+      - name: Read pipeline schedule date
+        id: read_schedule
+        run: |
+          SCHEDULE_DATE=$(cat pipeline_schedule.ctl)
+          echo "schedule_date=${SCHEDULE_DATE}" >> $GITHUB_ENV
+
+      - name: Get current date
+        id: get_date
+        run: echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Check if dates match
+        id: date_check
+        run: |
+          if [ "$schedule_date" = "$current_date" ]; then
+            echo "match=true" >> $GITHUB_ENV
+          else
+            echo "match=false" >> $GITHUB_ENV
+          fi
+
+      - name: Push to Hugging Face
+        if: env.match != 'true'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          SPACE_NAME: cryptocurrency_prediction
+          HF_USERNAME: qywok
+        run: |
+          git add -A 
+          git commit -m "Model Deployment"
+          git push https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$SPACE_NAME main
