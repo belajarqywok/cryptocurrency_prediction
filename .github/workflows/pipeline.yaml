@@ -89,32 +89,14 @@ jobs:
          persist-credentials: false
          fetch-depth: 1
 
-      - name: Read pipeline schedule date
-        id: read_schedule
-        run: |
-          SCHEDULE_DATE=$(cat pipeline_schedule.ctl)
-          echo "schedule_date=${SCHEDULE_DATE}" >> $GITHUB_ENV
-
-      - name: Get current date
-        id: get_date
-        run: echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-
-      - name: Check if dates match
-        id: date_check
-        run: |
-          if [ "$schedule_date" = "$current_date" ]; then
-            echo "match=true" >> $GITHUB_ENV
-          else
-            echo "match=false" >> $GITHUB_ENV
-          fi
-
       - name: Push to Hugging Face
-        if: env.match != 'true'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           SPACE_NAME: cryptocurrency_prediction
           HF_USERNAME: qywok
         run: |
+          git config --local user.email "belajarqywok@gmail.com"
+          git config --local user.name "belajarqywok"
           git add -A 
           git commit -m "Model Deployment"
-          git push https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$SPACE_NAME main
+          git push https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$SPACE_NAME main --force

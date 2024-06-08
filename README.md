@@ -13,3 +13,12 @@
 <p align="center">
   <img src="./diagram/cryptocurrency_prediction.jpg"/>
 </p>
+
+---
+title: Test
+emoji: ⚡
+colorFrom: pink
+colorTo: blue
+sdk: static
+pinned: false
+---
