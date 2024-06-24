@@ -13,7 +13,7 @@ class Utilities:
 		self.scaler_path = './pickles'
 
 	async def cryptocurrency_prediction_utils(self,
-		days: int,sequence_length: int, model_name: str) -> tuple:
+		days: int, sequence_length: int, model_name: str) -> tuple:
 		model_path = os.path.join(self.model_path, f'{model_name}.keras')
 		model = load_model(model_path)
 
