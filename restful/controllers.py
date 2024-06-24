@@ -11,7 +11,7 @@ class cryptocurrency_controller:
     __SERVICE = cryptocurrency_svc()
 
     # Cryptocurrency List
-    def crypto_list(self) -> JSONResponse:
+    async def crypto_list(self) -> JSONResponse:
         try:
             DATASETS_PATH = './datasets'
             DATASETS = sorted(
@@ -42,36 +42,44 @@ class cryptocurrency_controller:
             )
 
     # Cryptocurrency Controller
-    def prediction(self, payload: CryptocurrencyPredictionSchema) -> JSONResponse:
+    async def prediction(self, payload: CryptocurrencyPredictionSchema) -> JSONResponse:
         try:
-            # DATASETS_PATH = './datasets'
-            # DATASETS = sorted(
-            #     [
-            #         item.replace(".csv", "") for item in os.listdir(DATASETS_PATH)
-            #         if os.path.isfile(os.path.join(DATASETS_PATH, item)) and item.endswith('.csv')
-            #     ]
-            # )
-
-            # # Model Validation
-            # if payload not in DATASETS:
-            #     return JSONResponse(
-            #         content = {
-            #             'message': 'Request Failed 1',
-            #             'status_code': HTTPStatus.BAD_REQUEST,
-            #             'data': None
-            #         },
-            #         status_code = HTTPStatus.BAD_REQUEST
-            #     )
-
-
-            prediction: list = self.__SERVICE.prediction(
-                payload = payload
+            DATASETS_PATH = './datasets'
+            DATASETS = sorted(
+                [
+                    item.replace(".csv", "") for item in os.listdir(DATASETS_PATH)
+                    if os.path.isfile(os.path.join(DATASETS_PATH, item)) and item.endswith('.csv')
+                ]
             )
+
+            # Validation
+            if (payload.days > 31) or (payload.days < 1):
+                return JSONResponse(
+                    content = {
+                        'message': 'prediction days cannot be more than a month and cannot be less than 1',
+                        'status_code': HTTPStatus.BAD_REQUEST,
+                        'data': None
+                    },
+                    status_code = HTTPStatus.BAD_REQUEST
+                )
+
+            if payload.currency not in DATASETS:
+                return JSONResponse(
+                    content = {
+                        'message': f'cryptocurrency {payload.currency} is not available.',
+                        'status_code': HTTPStatus.BAD_REQUEST,
+                        'data': None
+                    },
+                    status_code = HTTPStatus.BAD_REQUEST
+                )
+
+
+            prediction: dict = await self.__SERVICE.prediction(payload)
 
             if not prediction :
                 return JSONResponse(
                     content = {
-                        'message': 'Request Failed',
+                        'message': 'prediction could not be generated, please try again.',
                         'status_code': HTTPStatus.BAD_REQUEST,
                         'data': None
                     },
@@ -80,7 +88,7 @@ class cryptocurrency_controller:
 
             return JSONResponse(
                 content = {
-                    'message': 'Prediction Success',
+                    'message': 'prediction success',
                     'status_code': HTTPStatus.OK,
                     'data': {
 						'currency': payload.currency,
@@ -94,7 +102,7 @@ class cryptocurrency_controller:
             print(error_message)
             return JSONResponse(
                 content = {
-                    'message': 'Internal Server Error',
+                    'message': 'internal server error',
                     'status_code': HTTPStatus.INTERNAL_SERVER_ERROR,
                     'data': None
                 },

@@ -13,7 +13,7 @@ __CONTROLLER = cryptocurrency_controller()
 @route.get(path = '/lists')
 async def cryptocurrency_list_route() -> JSONResponse:
     # Cryptocurrency Controller
-    return __CONTROLLER.crypto_list()
+    return await __CONTROLLER.crypto_list()
 
 # Cryptocurrency Prediction
 @route.post(path = '/prediction')
@@ -21,5 +21,5 @@ async def cryptocurrency_pred_route(
     payload: CryptocurrencyPredictionSchema = Body(...)
 ) -> JSONResponse:
     # Cryptocurrency Controller
-    return __CONTROLLER.prediction(payload = payload)
+    return await __CONTROLLER.prediction(payload = payload)
 

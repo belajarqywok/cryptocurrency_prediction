@@ -6,14 +6,14 @@ class cryptocurrency_svc:
 	__PRED_UTILS = Utilities()
 
 	# Prediction Service
-	def prediction(self, payload: CryptocurrencyPredictionSchema) -> list:
-		days: int = payload.days
+	async def prediction(self, payload: CryptocurrencyPredictionSchema) -> dict:
+		days: int     = payload.days
 		currency: str = payload.currency
 
-		result: list = self.__PRED_UTILS.cryptocurrency_prediction_utils(
-			days = days,
-			model_name = currency,
+		actuals, predictions = await self.__PRED_UTILS.cryptocurrency_prediction_utils(
+			days            = days,
+			model_name      = currency,
 			sequence_length = 60
 		)
 
-		return result
+		return {'actuals': actuals, 'predictions': predictions}
