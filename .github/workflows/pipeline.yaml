@@ -7,8 +7,8 @@ on:
     tags:
       - '*'   
   schedule:
-    - cron: "0 1 * * *"
-    # 8 - 7 = 1
+    - cron: "0 7 * * *"
+    # 14 - 7 = 7
 
 jobs:
   extraction_train_modeling:
