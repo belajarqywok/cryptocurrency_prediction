@@ -48,7 +48,8 @@ jobs:
         if: env.match != 'true'
         run: |
           mkdir datasets
-          cat postman/symbols.json
+          wget https://github.com/belajarqywok/cryptocurrency_prediction/raw/main/postman/symbols.json \
+            -O postman/symbols.json
           go run scraper.go
 
       - name: Install Libraries
