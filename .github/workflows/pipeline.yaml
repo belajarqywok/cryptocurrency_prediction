@@ -21,6 +21,7 @@ jobs:
 
       - uses: actions/checkout@v3     
         with:
+          lfs: true
           persist-credentials: false
           fetch-depth: 1
 
@@ -47,6 +48,7 @@ jobs:
         if: env.match != 'true'
         run: |
           mkdir datasets
+          cat postman/symbols.json
           go run scraper.go
 
       - name: Install Libraries
