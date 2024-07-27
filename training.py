@@ -60,11 +60,24 @@ class ModelBuilder:
     @staticmethod
     def build_model(input_shape):
         model = Sequential([
-            LSTM(50, return_sequences = True, input_shape = input_shape),
+            LSTM(units=128, return_sequences=True, input_shape=input_shape),
             Dropout(0.2),
-            LSTM(50, return_sequences = False),
+            Dense(128, activation='relu'),
+    
+            LSTM(units=64, return_sequences=True),
             Dropout(0.2),
-            Dense(1)
+            Dense(64, activation='relu'),
+    
+            LSTM(units=64, return_sequences=True),
+            Dropout(0.2),
+            Dense(64, activation='relu'),
+    
+            LSTM(units=64, return_sequences=False),
+            Dropout(0.2),
+            Dense(64, activation='relu'),
+    
+            Dense(32, activation='softmax'),
+            Dense(units=1)
         ])
         model.compile(optimizer = 'adam', loss = 'mean_squared_error')
         return model

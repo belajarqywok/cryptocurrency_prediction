@@ -11,3 +11,9 @@
 # Pycache
 /__pycache__
 /restful/__pycache__
+
+# Temp
+/models
+/pickles
+/datasets
+/posttrained

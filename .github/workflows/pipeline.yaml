@@ -45,7 +45,9 @@ jobs:
 
       - name: Scraping Yahoo Finance
         if: env.match != 'true'
-        run:  go run scraper.go
+        run: |
+          mkdir datasets
+          go run scraper.go
 
       - name: Install Libraries
         if: env.match != 'true'
@@ -53,26 +55,63 @@ jobs:
 
       - name: Modeling and Training
         if: env.match != 'true'
-        run: python training.py
+        run: |
+          mkdir models
+          mkdir pickles
+          mkdir posttrained
+          python training.py
 
       - name: Set Pipeline Schedule
         if: env.match != 'true'
         run: echo "$(date +'%Y-%m-%d')" > pipeline_schedule.ctl
-
-      - name: Commit changes
+          
+      - name: Zip Posttrained, Models, and Pickles
         if: env.match != 'true'
         run: |
-          git config --local user.email "belajarqywok@gmail.com"
-          git config --local user.name "belajarqywok"
-          git add -A
-          git commit -m "Data Extraction, Training, and Modeling"
+          zip -r models.zip models
+          zip -r pickles.zip pickles
+          zip -r datasets.zip datasets
+          zip -r posttrained.zip posttrained
 
-      - name: Push changes
+      - name: Store Datasets to Google Drive 
         if: env.match != 'true'
-        uses: ad-m/github-push-action@master
+        uses: adityak74/google-drive-upload-git-action@main
         with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          branch: main      
+          credentials: ${{ secrets.GDRIVE_CRED }}
+          filename: datasets.zip
+          folderId: ${{ secrets.GDRIVE_ID }}
+          name: datasets.zip
+          overwrite: "true"
+          
+      - name: Store Models to Google Drive 
+        if: env.match != 'true'
+        uses: adityak74/google-drive-upload-git-action@main
+        with:
+          credentials: ${{ secrets.GDRIVE_CRED }}
+          filename: models.zip
+          folderId: ${{ secrets.GDRIVE_ID }}
+          name: models.zip
+          overwrite: "true"
+
+      - name: Store Pickles to Google Drive 
+        if: env.match != 'true'
+        uses: adityak74/google-drive-upload-git-action@main
+        with:
+          credentials: ${{ secrets.GDRIVE_CRED }}
+          filename: pickles.zip
+          folderId: ${{ secrets.GDRIVE_ID }}
+          name: pickles.zip
+          overwrite: "true"
+
+      - name: Store Posttrained to Google Drive 
+        if: env.match != 'true'
+        uses: adityak74/google-drive-upload-git-action@main
+        with:
+          credentials: ${{ secrets.GDRIVE_CRED }}
+          filename: posttrained.zip
+          folderId: ${{ secrets.GDRIVE_ID }}
+          name: posttrained.zip
+          overwrite: "true"
 
   model_deployment:
     name: Model Deployment

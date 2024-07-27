@@ -1,14 +1,3 @@
-{
-  "builds": [
-    {
-      "src": "main.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "main.py"
-    }
-  ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:63f80f44168b382cb324dc3266a4bcec81518198d4e7f5d550e135f529438a11
+size 165
