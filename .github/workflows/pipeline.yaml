@@ -7,7 +7,7 @@ on:
     tags:
       - '*'   
   schedule:
-    - cron: "0 1 * * *"
+    - cron: "0 3 * * *"
     # 8 - 7 = 1
 
 jobs:
@@ -115,6 +115,21 @@ jobs:
           folderId: ${{ secrets.GDRIVE_ID }}
           name: posttrained.zip
           overwrite: "true"
+
+      - name: Commit changes
+        if: env.match != 'true'
+        run: |
+          git config --local user.email "belajarqywok@gmail.com"
+          git config --local user.name "belajarqywok"
+          git add -A
+          git commit -m "Data Extraction, Training, and Modeling"
+
+      - name: Push changes
+        if: env.match != 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          branch: main 
 
   model_deployment:
     name: Model Deployment
