@@ -7,8 +7,8 @@ on:
     tags:
       - '*'   
   schedule:
-    - cron: "0 3 * * *"
-    # 8 - 7 = 1
+    - cron: "0 13 * * *"
+    # 20 - 7 = 13
 
 jobs:
   extraction_train_modeling:
@@ -115,6 +115,19 @@ jobs:
           folderId: ${{ secrets.GDRIVE_ID }}
           name: posttrained.zip
           overwrite: "true"
+
+      - name: Remove Temporarary Files and Directories
+        if: env.match != 'true'
+        run: |
+          rm models.zip
+          rm pickles.zip
+          rm datasets.zip
+          rm posttrained.zip
+
+          rm -rf models
+          rm -rf pickles
+          rm -rf datasets
+          rm -rf posttrained
 
       - name: Commit changes
         if: env.match != 'true'

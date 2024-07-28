@@ -32,6 +32,10 @@ RUN --mount=type=secret,id=PICKLES_ID,mode=0444,required=true \
 	gdown https://drive.google.com/uc?id=$(cat /run/secrets/PICKLES_ID) && \
     unzip pickles.zip && rm pickles.zip
 
+RUN --mount=type=secret,id=DATASETS_ID,mode=0444,required=true \
+	gdown https://drive.google.com/uc?id=$(cat /run/secrets/DATASETS_ID) && \
+    unzip datasets.zip && rm datasets.zip
+
 RUN --mount=type=secret,id=POSTTRAINED_ID,mode=0444,required=true \
 	gdown https://drive.google.com/uc?id=$(cat /run/secrets/POSTTRAINED_ID) && \
     unzip posttrained.zip && rm posttrained.zip

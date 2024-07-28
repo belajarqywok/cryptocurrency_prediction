@@ -138,7 +138,8 @@ def main():
         dataframe = pd.read_csv(os.path.join(datasets_path, dataset), index_col='Date')[['Close']]
         model_file = os.path.join(models_path, f"{dataset.replace('.csv', '')}.keras")
 
-        dataframe = data_processor.preprocess_data(dataframe)
+        # dataframe = data_processor.preprocess_data(dataframe)
+        dataframe.dropna(inplace = True)
         standard_scaler, dataframe = data_processor.scale_data(dataframe, StandardScaler)
         minmax_scaler, dataframe = data_processor.scale_data(dataframe, MinMaxScaler)
 
