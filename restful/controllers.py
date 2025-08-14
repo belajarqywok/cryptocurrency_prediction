@@ -13,11 +13,11 @@ class cryptocurrency_controller:
     # Cryptocurrency List
     async def crypto_list(self) -> JSONResponse:
         try:
-            DATASETS_PATH = './datasets'
+            DATASETS_PATH = './models'
             DATASETS = sorted(
                 [
-                    item.replace(".csv", "") for item in os.listdir(DATASETS_PATH)
-                    if os.path.isfile(os.path.join(DATASETS_PATH, item)) and item.endswith('.csv')
+                    item.replace(".onnx", "") for item in os.listdir(DATASETS_PATH)
+                    if os.path.isfile(os.path.join(DATASETS_PATH, item)) and item.endswith('.onnx')
                 ]
             )
 
@@ -44,11 +44,11 @@ class cryptocurrency_controller:
     # Cryptocurrency Controller
     async def prediction(self, payload: CryptocurrencyPredictionSchema) -> JSONResponse:
         try:
-            DATASETS_PATH = './datasets'
+            DATASETS_PATH = './models'
             DATASETS = sorted(
                 [
-                    item.replace(".csv", "") for item in os.listdir(DATASETS_PATH)
-                    if os.path.isfile(os.path.join(DATASETS_PATH, item)) and item.endswith('.csv')
+                    item.replace(".onnx", "") for item in os.listdir(DATASETS_PATH)
+                    if os.path.isfile(os.path.join(DATASETS_PATH, item)) and item.endswith('.onnx')
                 ]
             )
 
