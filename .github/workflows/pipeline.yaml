@@ -7,8 +7,9 @@ on:
     tags:
       - '*'   
   schedule:
-    - cron: "0 13 * * *"
-    # 20 - 7 = 13
+    - cron: "0 22 * * *"
+    # 5 - 7 = [ -2 ]
+    # karena minus, jadi 24 - 2 = [ 22 ]
 
 jobs:
   extraction_train_modeling:
@@ -44,90 +45,90 @@ jobs:
             echo "match=false" >> $GITHUB_ENV
           fi
 
-      - name: Scraping Yahoo Finance
-        if: env.match != 'true'
-        run: |
-          mkdir datasets
-          wget https://github.com/belajarqywok/cryptocurrency_prediction/raw/main/postman/symbols.json \
-            -O postman/symbols.json
-          go run scraper.go
+      # - name: Scraping Yahoo Finance
+      #   if: env.match != 'true'
+      #   run: |
+      #     mkdir datasets
+      #     wget https://github.com/belajarqywok/cryptocurrency_prediction/raw/main/postman/symbols.json \
+      #       -O postman/symbols.json
+      #     go run scraper.go
 
-      - name: Install Libraries
-        if: env.match != 'true'
-        run: pip install -r requirements.txt
+      # - name: Install Libraries
+      #   if: env.match != 'true'
+      #   run: pip install -r requirements.txt
 
-      - name: Modeling and Training
-        if: env.match != 'true'
-        run: |
-          mkdir models
-          mkdir pickles
-          mkdir posttrained
-          python training.py
+      # - name: Modeling and Training
+      #   if: env.match != 'true'
+      #   run: |
+      #     mkdir models
+      #     mkdir pickles
+      #     mkdir posttrained
+      #     python training.py
 
       - name: Set Pipeline Schedule
         if: env.match != 'true'
         run: echo "$(date +'%Y-%m-%d')" > pipeline_schedule.ctl
           
-      - name: Zip Posttrained, Models, and Pickles
-        if: env.match != 'true'
-        run: |
-          zip -r models.zip models
-          zip -r pickles.zip pickles
-          zip -r datasets.zip datasets
-          zip -r posttrained.zip posttrained
+      # - name: Zip Posttrained, Models, and Pickles
+      #   if: env.match != 'true'
+      #   run: |
+      #     zip -r models.zip models
+      #     zip -r pickles.zip pickles
+      #     zip -r datasets.zip datasets
+      #     zip -r posttrained.zip posttrained
 
-      - name: Store Datasets to Google Drive 
-        if: env.match != 'true'
-        uses: adityak74/google-drive-upload-git-action@main
-        with:
-          credentials: ${{ secrets.GDRIVE_CRED }}
-          filename: datasets.zip
-          folderId: ${{ secrets.GDRIVE_ID }}
-          name: datasets.zip
-          overwrite: "true"
+      # - name: Store Datasets to Google Drive 
+      #   if: env.match != 'true'
+      #   uses: adityak74/google-drive-upload-git-action@main
+      #   with:
+      #     credentials: ${{ secrets.GDRIVE_CRED }}
+      #     filename: datasets.zip
+      #     folderId: ${{ secrets.GDRIVE_ID }}
+      #     name: datasets.zip
+      #     overwrite: "true"
           
-      - name: Store Models to Google Drive 
-        if: env.match != 'true'
-        uses: adityak74/google-drive-upload-git-action@main
-        with:
-          credentials: ${{ secrets.GDRIVE_CRED }}
-          filename: models.zip
-          folderId: ${{ secrets.GDRIVE_ID }}
-          name: models.zip
-          overwrite: "true"
+      # - name: Store Models to Google Drive 
+      #   if: env.match != 'true'
+      #   uses: adityak74/google-drive-upload-git-action@main
+      #   with:
+      #     credentials: ${{ secrets.GDRIVE_CRED }}
+      #     filename: models.zip
+      #     folderId: ${{ secrets.GDRIVE_ID }}
+      #     name: models.zip
+      #     overwrite: "true"
 
-      - name: Store Pickles to Google Drive 
-        if: env.match != 'true'
-        uses: adityak74/google-drive-upload-git-action@main
-        with:
-          credentials: ${{ secrets.GDRIVE_CRED }}
-          filename: pickles.zip
-          folderId: ${{ secrets.GDRIVE_ID }}
-          name: pickles.zip
-          overwrite: "true"
+      # - name: Store Pickles to Google Drive 
+      #   if: env.match != 'true'
+      #   uses: adityak74/google-drive-upload-git-action@main
+      #   with:
+      #     credentials: ${{ secrets.GDRIVE_CRED }}
+      #     filename: pickles.zip
+      #     folderId: ${{ secrets.GDRIVE_ID }}
+      #     name: pickles.zip
+      #     overwrite: "true"
 
-      - name: Store Posttrained to Google Drive 
-        if: env.match != 'true'
-        uses: adityak74/google-drive-upload-git-action@main
-        with:
-          credentials: ${{ secrets.GDRIVE_CRED }}
-          filename: posttrained.zip
-          folderId: ${{ secrets.GDRIVE_ID }}
-          name: posttrained.zip
-          overwrite: "true"
+      # - name: Store Posttrained to Google Drive 
+      #   if: env.match != 'true'
+      #   uses: adityak74/google-drive-upload-git-action@main
+      #   with:
+      #     credentials: ${{ secrets.GDRIVE_CRED }}
+      #     filename: posttrained.zip
+      #     folderId: ${{ secrets.GDRIVE_ID }}
+      #     name: posttrained.zip
+      #     overwrite: "true"
 
-      - name: Remove Temporarary Files and Directories
-        if: env.match != 'true'
-        run: |
-          rm models.zip
-          rm pickles.zip
-          rm datasets.zip
-          rm posttrained.zip
+      # - name: Remove Temporarary Files and Directories
+      #   if: env.match != 'true'
+      #   run: |
+      #     rm models.zip
+      #     rm pickles.zip
+      #     rm datasets.zip
+      #     rm posttrained.zip
 
-          rm -rf models
-          rm -rf pickles
-          rm -rf datasets
-          rm -rf posttrained
+      #     rm -rf models
+      #     rm -rf pickles
+      #     rm -rf datasets
+      #     rm -rf posttrained
 
       - name: Commit changes
         if: env.match != 'true'

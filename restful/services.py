@@ -1,4 +1,5 @@
-from restful.cutils.utilities import Utilities
+# from restful.cutils.utilities import Utilities
+from restful.onnx_utilities import Utilities
 from restful.schemas import CryptocurrencyPredictionSchema
 
 class cryptocurrency_svc:
